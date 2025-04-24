@@ -4,19 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  ChartBar,
-  House,
-  LogOut,
-  Menu,
-  MessageSquare,
-  Plus,
-  Radar,
-  Settings,
-  User,
-  UserRoundPlus,
-  Volleyball,
-} from "lucide-react";
+import { House, LogOut, Menu, Settings, User } from "lucide-react";
 import Image from "next/image";
 import logo from "@/app/assets/logo.png";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -44,6 +32,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SearchBar from "./searchbar";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,7 +108,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="px-4 lg:px-6 h-14 flex items-center mx-auto border-b dark:border-zinc-800 border-gray-200 fixed w-full top-0 z-[1000] max-w-[1400px] backdrop-blur supports-[padding-top:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] dark:bg-transparent bg-white">
+    <header className="px-4 lg:px-6 h-14 flex items-center mx-auto border-b dark:border-zinc-800 border-gray-200 fixed w-full top-0 z-[10] max-w-[1400px] backdrop-blur supports-[padding-top:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] dark:bg-transparent bg-white">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="lg:hidden">
           <Button variant="ghost" size="icon" className="mr-2">
@@ -212,8 +201,53 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+        <SearchBar
+          small={true}
+          height="py-4"
+          flex="flex"
+          width="w-80"
+          classes={"z-20"}
+        />
         <ModeToggle />
-        {profilePic}
+        <div className="ml-auto flex not-odd:items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none">
+              {profilePic}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40 mr-2" sideOffset={8}>
+              <div className="flex flex-col p-2">
+                <span className="text-sm font-bold text-center">
+                  {username}
+                </span>
+              </div>
+              <DropdownMenuSeparator />
+
+              <Link href="/profile">
+                <DropdownMenuItem className="cursor-pointer flex items-center p-2">
+                  <User className="w-4 h-4 mr-2" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+              </Link>
+
+              <Link href="/settings">
+                <DropdownMenuItem className="cursor-pointer flex items-center p-2">
+                  <Settings className="w-4 h-4 mr-2" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+              </Link>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950  flex items-center p-2"
+                onClick={() => setShowLogoutDialog(true)}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </nav>
 
       {/* Mobile Navigation Icons */}

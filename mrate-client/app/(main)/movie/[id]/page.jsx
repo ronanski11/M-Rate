@@ -182,7 +182,6 @@ export default function MoviePage() {
                   )}
                 </div>
               </div>
-
               {/* User Rating Display (if exists) */}
               {userRating && (
                 <Card className="bg-muted/30">
@@ -204,7 +203,6 @@ export default function MoviePage() {
                   </CardContent>
                 </Card>
               )}
-
               {/* Genres */}
               {movie.Genre && movie.Genre !== "N/A" && (
                 <div className="flex flex-wrap gap-2">
@@ -215,13 +213,11 @@ export default function MoviePage() {
                   ))}
                 </div>
               )}
-
               {/* Plot */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Plot</h2>
                 <p className="text-muted-foreground">{movie.Plot}</p>
               </div>
-
               {/* Cast & Crew */}
               <div className="space-y-4">
                 {movie.Director && movie.Director !== "N/A" && (
@@ -248,7 +244,6 @@ export default function MoviePage() {
                   </div>
                 )}
               </div>
-
               {/* Additional Info */}
               {movie.Awards && movie.Awards !== "N/A" && (
                 <div>
@@ -259,44 +254,45 @@ export default function MoviePage() {
                   <p className="text-muted-foreground">{movie.Awards}</p>
                 </div>
               )}
-
               {/* Movie Ratings Section */}
               <div>
                 <h3 className="text-lg font-semibold mb-2 flex items-center">
-                  <Star className="mr-2 h-5 w-5 text-yellow-500" />
+                  <Star className="mr-2 h-5 w-5" style={{ color: "#f5c518" }} />
                   Ratings
                 </h3>
                 <Card>
-                  <CardContent className="p-4">
+                  <CardContent>
                     <div className="space-y-2">
-                      {ratings.length > 0 ? (
-                        ratings.map((rating, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center"
-                          >
-                            <span className="text-sm">{rating.Source}</span>
-                            <Badge variant="outline">{rating.Value}</Badge>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          No ratings available
-                        </p>
-                      )}
-
                       {movie.imdbRating && movie.imdbRating !== "N/A" && (
                         <div className="flex justify-between items-center">
                           <span className="text-sm">IMDb Rating</span>
                           <Badge variant="outline">{movie.imdbRating}/10</Badge>
                         </div>
                       )}
+                      {ratings.length > 0 ? (
+                        ratings
+                          .filter(
+                            (rating) =>
+                              rating.Source !== "Internet Movie Database"
+                          )
+                          .map((rating, index) => (
+                            <div
+                              key={index}
+                              className="flex justify-between items-center"
+                            >
+                              <span className="text-sm">{rating.Source}</span>
+                              <Badge variant="outline">{rating.Value}</Badge>
+                            </div>
+                          ))
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          No ratings available
+                        </p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
               </div>
-
-              {/* User Rating Button */}
               <div className="pt-4">
                 <Separator className="my-4" />
                 <h3 className="text-lg font-semibold mb-4">
