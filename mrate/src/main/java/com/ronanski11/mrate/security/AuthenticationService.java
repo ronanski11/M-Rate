@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.ronanski11.mrate.model.Role;
 import com.ronanski11.mrate.model.User;
+import com.ronanski11.mrate.model.Watchlist;
 import com.ronanski11.mrate.repository.UserRepository;
+import com.ronanski11.mrate.repository.WatchlistRepository;
 import com.ronanski11.mrate.security.model.AuthenticationRequest;
 import com.ronanski11.mrate.security.model.AuthenticationResponse;
 import com.ronanski11.mrate.security.model.RegisterRequest;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationService {
 
 	private final UserRepository userRepository;
+	private final WatchlistRepository watchlistRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
@@ -33,6 +36,9 @@ public class AuthenticationService {
 		if (userRepository.findByUsername(request.getUsername()).isPresent())
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is taken.");
 		User savedUser = userRepository.save(user);
+		Watchlist watchlist = new Watchlist();
+		watchlist.setUserId(savedUser.getId());
+		watchlistRepository.save(watchlist);
 		var jwtToken = jwtService.generateToken(user, savedUser.getId());
 		return ResponseEntity.ok(AuthenticationResponse.builder().token(jwtToken).build());
 	}
