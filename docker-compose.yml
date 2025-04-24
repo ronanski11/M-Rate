@@ -1,0 +1,28 @@
+version: '3'
+services:
+  springboot-app:
+    build:
+      context: .
+      dockerfile: mrate/Dockerfile
+    ports:
+      - 8090:8080
+    networks:
+      - mrate-network
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: mrate-db/Dockerfile
+    ports:
+      - 27010:27017
+    networks:
+      mrate-network:
+        aliases:
+          - mongodb
+
+networks:
+  mrate-network:

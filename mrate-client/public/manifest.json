@@ -1,0 +1,16 @@
+{
+  "short_name": "M-Rate",
+  "name": "M-Rate",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
