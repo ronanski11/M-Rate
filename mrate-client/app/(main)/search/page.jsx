@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "@/components/searchbar";
+import MovieCard from "@/components/movie-card";
 
 // Create a client component that uses search params
 function SearchResults() {
@@ -121,37 +122,7 @@ function SearchResults() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {movies.map((movie) => (
-              <Link
-                href={`/movie/${movie.imdbID}`}
-                key={movie.imdbID}
-                className="group"
-              >
-                <Card className="overflow-hidden h-full transition-all hover:shadow-md">
-                  <div className="aspect-[2/3] relative bg-muted">
-                    {movie.Poster && movie.Poster !== "N/A" ? (
-                      <Image
-                        src={movie.Poster}
-                        alt={movie.Title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-muted">
-                        <Film className="h-12 w-12 text-muted-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-medium line-clamp-2 group-hover:text-primary transition-colors">
-                      {movie.Title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {movie.Year}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+              <MovieCard key={movie.imdbID} movie={movie} />
             ))}
           </div>
         )}
