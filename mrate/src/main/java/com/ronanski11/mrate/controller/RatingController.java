@@ -12,7 +12,7 @@ import com.ronanski11.mrate.security.AuthenticationService;
 import com.ronanski11.mrate.service.RatingService;
 
 @RestController
-@RequestMapping("/rate")
+@RequestMapping("/api/rating")
 public class RatingController {
 
 	@Autowired

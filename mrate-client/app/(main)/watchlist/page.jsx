@@ -13,6 +13,8 @@ import {
   CalendarDays,
   ChevronDown,
   ChevronUp,
+  Star,
+  Trash,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -40,6 +42,7 @@ import MovieCard from "@/components/movie-card";
 import axios from "@/app/axiosInstance";
 import Image from "next/image";
 import Link from "next/link";
+import RatingDialog from "@/components/rating-dialog";
 
 export default function WatchlistPage() {
   // State for watchlist data and UI control
@@ -53,6 +56,8 @@ export default function WatchlistPage() {
   const [sortBy, setSortBy] = useState("dateAdded");
   const [sortOrder, setSortOrder] = useState("desc");
   const [filterWatched, setFilterWatched] = useState("all"); // all, watched, unwatched
+  const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   // Fetch user's watchlist when component mounts
   useEffect(() => {
@@ -179,9 +184,16 @@ export default function WatchlistPage() {
     return result;
   }, [watchlist, searchQuery, sortBy, sortOrder, filterWatched]);
 
-  // Function to toggle watched status
   const toggleWatched = async (movie) => {
     try {
+      // If marking as watched, open the rating dialog
+      if (!movie.watchlistData.watched) {
+        setSelectedMovie(movie);
+        setRatingDialogOpen(true);
+        return; // Return early, the actual watched status update will happen after rating
+      }
+
+      // If marking as unwatched, proceed as before
       // Optimistic update
       setWatchlist((prev) =>
         prev.map((m) => {
@@ -197,11 +209,6 @@ export default function WatchlistPage() {
           return m;
         })
       );
-
-      // Call API to update
-      await axios.post(`/watchlist/${movie.imdbID}/watched`, {
-        watched: !movie.watchlistData.watched,
-      });
     } catch (err) {
       console.error("Error updating watched status:", err);
       // Revert on error
@@ -219,6 +226,32 @@ export default function WatchlistPage() {
           return m;
         })
       );
+    }
+  };
+
+  // 4. Add this new function to handle rating submission
+  const handleRatingSubmit = async (rating) => {
+    if (!selectedMovie) return;
+
+    try {
+      // Optimistic update
+      setWatchlist((prev) =>
+        prev.map((m) => {
+          if (m.imdbID === selectedMovie.imdbID) {
+            return {
+              ...m,
+              watchlistData: {
+                ...m.watchlistData,
+                watched: true, // Mark as watched
+              },
+            };
+          }
+          return m;
+        })
+      );
+    } catch (err) {
+      console.error("Error updating watched status after rating:", err);
+      // Error handling as needed
     }
   };
 
@@ -316,29 +349,30 @@ export default function WatchlistPage() {
           <div className="flex items-center gap-2">
             <Button
               size="sm"
-              variant={movie.watchlistData.watched ? "default" : "outline"}
-              className="h-8 px-2"
-              onClick={() => toggleWatched(movie)}
-            >
-              {movie.watchlistData.watched ? (
-                <>
-                  <Check className="h-4 w-4 mr-1" /> Watched
-                </>
-              ) : (
-                <>
-                  <Clock className="h-4 w-4 mr-1" /> Mark Watched
-                </>
-              )}
-            </Button>
-
-            <Button
-              size="sm"
               variant="outline"
               className="h-8 px-2 text-destructive hover:bg-destructive/10"
               onClick={() => removeFromWatchlist(movie)}
             >
-              <X className="h-4 w-4 mr-1" /> Remove
+              {movie.watchlistData.watched ? (
+                <>
+                  <Trash className="h-4 w-4 mr-1" /> Remove
+                </>
+              ) : (
+                <>
+                  <X className="h-4 w-4 mr-1" /> Remove
+                </>
+              )}
             </Button>
+            {!movie.watchlistData.watched && (
+              <Button
+                size="sm"
+                variant={movie.watchlistData.watched ? "default" : "outline"}
+                className="h-8 px-2"
+                onClick={() => toggleWatched(movie)}
+              >
+                <Star className="h-4 w-4 mr-1" /> Rate
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -567,7 +601,7 @@ export default function WatchlistPage() {
       {watchlistStats && (
         <div className="mb-6">
           <Tabs
-            defaultValue="all"
+            defaultValue="unwatched"
             className="w-full"
             onValueChange={(value) => {
               // Handle tab change by updating the filter state
@@ -697,6 +731,12 @@ export default function WatchlistPage() {
           <ArrowUp className="h-6 w-6" />
         </Button>
       )}
+      <RatingDialog
+        isOpen={ratingDialogOpen}
+        onClose={() => setRatingDialogOpen(false)}
+        movie={selectedMovie}
+        onRatingSubmit={handleRatingSubmit}
+      />
     </div>
   );
 }

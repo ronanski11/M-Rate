@@ -1,5 +1,7 @@
 package com.ronanski11.mrate.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,7 @@ public class RatingService {
 		}
 		
 		rating.setUserId(userId);
+		rating.setLastUpdated(LocalDateTime.now());
 		return repo.save(rating);
 	}
 
