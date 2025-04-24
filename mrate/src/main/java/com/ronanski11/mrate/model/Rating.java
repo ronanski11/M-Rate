@@ -17,18 +17,8 @@ public class Rating {
 	private String userId;
 	
 	private String imdbId;
-
-	private Double narrative;
 	
-	private Double technical;
-	
-	private Double performance;
-	
-	private Double emotional;
-	
-	private Double cultural;
-	
-	private Double overall;
+	private Double rating;
 	
 	private LocalDateTime lastUpdated;
 
