@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { House, LogOut, Menu, Settings, User } from "lucide-react";
+import { House, LogOut, Menu, Search, Settings, User } from "lucide-react";
 import Image from "next/image";
 import logo from "@/app/assets/logo.png";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -252,6 +252,9 @@ export default function Navbar() {
 
       {/* Mobile Navigation Icons */}
       <div className="ml-auto flex lg:hidden items-center gap-4">
+        <Link href={"/search"}>
+          <Search />
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger className="outline-none">
             {profilePic}

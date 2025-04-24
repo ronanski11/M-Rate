@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Film, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,8 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "@/components/searchbar";
 
-export default function SearchPage() {
+// Create a client component that uses search params
+function SearchResults() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get("q") || "";
@@ -91,7 +92,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-8">
+    <>
       {/* Search Header */}
       <div className="mb-8">
         <SearchBar showFullButton onSearchSubmit={handleSearchSubmit} />
@@ -168,6 +169,26 @@ export default function SearchPage() {
           <ArrowUp className="h-6 w-6" />
         </Button>
       )}
+    </>
+  );
+}
+
+// Loading fallback for the Suspense boundary
+function SearchPageLoading() {
+  return (
+    <div className="flex justify-center items-center py-20">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>
+  );
+}
+
+// Main SearchPage component
+export default function SearchPage() {
+  return (
+    <div className="container max-w-6xl mx-auto px-4 py-8">
+      <Suspense fallback={<SearchPageLoading />}>
+        <SearchResults />
+      </Suspense>
     </div>
   );
 }
