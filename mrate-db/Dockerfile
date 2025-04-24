@@ -2,8 +2,8 @@
 FROM mongo:latest
 
 # Copy the dump folder and restore script into the container
-COPY allzinator-db/dump /dump
-COPY allzinator-db/restore-db.sh /docker-entrypoint-initdb.d/restore-db.sh
+COPY mrate-db/dump /dump
+COPY mrate-db/restore-db.sh /docker-entrypoint-initdb.d/restore-db.sh
 
 # Make the restore script executable
 RUN chmod +x /docker-entrypoint-initdb.d/restore-db.sh

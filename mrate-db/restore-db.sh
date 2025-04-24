@@ -2,7 +2,7 @@
 set -e
 
 # Check if your db exists or any condition to decide if mongorestore should run
-DB_NAME="allzinator-DB"
+DB_NAME="mrate-DB"
 
 if [ -z "$(mongo --host localhost --port 27017 --eval "db.getMongo().getDBNames().indexOf('$DB_NAME')" --quiet)" ]; then
     echo "Restoring database from dump..."
