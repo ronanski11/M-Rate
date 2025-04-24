@@ -18,7 +18,8 @@ public class WatchlistService {
 	WatchlistRepository repo;
 
 	public Map<String, WatchlistEntry> getWatchlist(String id) {
-		return repo.findByUserId(id).getMovies();
+		Watchlist result = repo.findByUserId(id);
+		return result == null ? new HashMap<String, WatchlistEntry>() : result.getMovies();
 	}
 
 	public void changeWatchlistEntry(String imdbId, String id) {
