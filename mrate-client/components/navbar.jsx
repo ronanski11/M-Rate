@@ -4,7 +4,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { House, LogOut, Menu, Search, Settings, User } from "lucide-react";
+import {
+  Bookmark,
+  House,
+  LogOut,
+  Menu,
+  Search,
+  Settings,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import logo from "@/app/assets/logo.png";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -56,7 +64,10 @@ export default function Navbar() {
     }
   }, []);
 
-  const navLinks = [{ href: "/", label: "Home", icon: <House /> }];
+  const navLinks = [
+    { href: "/", label: "Home", icon: <House /> },
+    { href: "/watchlist", label: "Watchlist", icon: <Bookmark /> },
+  ];
 
   const adminLinks = [];
 
@@ -169,6 +180,13 @@ export default function Navbar() {
 
       {/* Desktop Navigation */}
       <nav className="ml-auto hidden lg:flex items-center gap-4 sm:gap-6">
+        <SearchBar
+          small={true}
+          height="py-4"
+          flex="flex"
+          width="w-80"
+          classes={"z-20"}
+        />
         {navLinks.map(
           (link) =>
             link.label !== "Home" && (
@@ -201,13 +219,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-        <SearchBar
-          small={true}
-          height="py-4"
-          flex="flex"
-          width="w-80"
-          classes={"z-20"}
-        />
         <ModeToggle />
         <div className="ml-auto flex not-odd:items-center gap-4">
           <DropdownMenu>
