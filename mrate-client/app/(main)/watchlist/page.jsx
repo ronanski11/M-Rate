@@ -38,11 +38,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import MovieCard from "@/components/movie-card";
 import axios from "@/app/axiosInstance";
 import Image from "next/image";
 import Link from "next/link";
 import RatingDialog from "@/components/rating-dialog";
+import { motion } from "framer-motion";
 
 export default function WatchlistPage() {
   // State for watchlist data and UI control
@@ -265,12 +265,7 @@ export default function WatchlistPage() {
       await axios.post(`/watchlist/${movie.imdbID}`);
     } catch (err) {
       console.error("Error removing from watchlist:", err);
-      // Reload watchlist on error
-      const response = await axios.get("/watchlist/full");
-      if (response.data && response.data.movies) {
-        // Refresh the watchlist
-        // (simplified for brevity - would need to fetch movie details again)
-      }
+      window.location.reload();
     }
   };
 
@@ -448,8 +443,15 @@ export default function WatchlistPage() {
         <Card>
           <CardContent className="p-0">
             <div className="divide-y">
-              {filteredAndSortedWatchlist.map((movie) => (
-                <WatchlistListItem key={movie.imdbID} movie={movie} />
+              {filteredAndSortedWatchlist.map((movie, index) => (
+                <motion.div
+                  key={movie.imdbID}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <WatchlistListItem movie={movie} />
+                </motion.div>
               ))}
             </div>
           </CardContent>
@@ -506,7 +508,7 @@ export default function WatchlistPage() {
                   <span className="">Filters & Sort</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[300px] sm:w-[400px] gap-0">
+              <SheetContent className="w-[300px] sm:w-[400px] gap-0 md:mt-0 mt-14">
                 <SheetHeader>
                   <SheetTitle>Filters & Sorting</SheetTitle>
                 </SheetHeader>
@@ -656,11 +658,15 @@ export default function WatchlistPage() {
                     <Card>
                       <CardContent className="p-0">
                         <div className="divide-y">
-                          {filteredContent.map((movie) => (
-                            <WatchlistListItem
+                          {filteredContent.map((movie, index) => (
+                            <motion.div
                               key={movie.imdbID}
-                              movie={movie}
-                            />
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                            >
+                              <WatchlistListItem movie={movie} />
+                            </motion.div>
                           ))}
                         </div>
                       </CardContent>
@@ -700,11 +706,15 @@ export default function WatchlistPage() {
                     <Card>
                       <CardContent className="p-0">
                         <div className="divide-y">
-                          {filteredContent.map((movie) => (
-                            <WatchlistListItem
+                          {filteredContent.map((movie, index) => (
+                            <motion.div
                               key={movie.imdbID}
-                              movie={movie}
-                            />
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                            >
+                              <WatchlistListItem movie={movie} />
+                            </motion.div>
                           ))}
                         </div>
                       </CardContent>

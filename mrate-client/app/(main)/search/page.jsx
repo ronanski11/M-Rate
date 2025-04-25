@@ -96,7 +96,11 @@ function SearchResults() {
     <>
       {/* Search Header */}
       <div className="mb-8">
-        <SearchBar showFullButton onSearchSubmit={handleSearchSubmit} />
+        <SearchBar
+          showFullButton
+          onSearchSubmit={handleSearchSubmit}
+          autoFocus
+        />
       </div>
 
       {/* Search Results */}

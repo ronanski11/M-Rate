@@ -119,7 +119,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="px-4 lg:px-6 h-14 flex items-center mx-auto border-b dark:border-zinc-800 border-gray-200 fixed w-full top-0 z-[10] max-w-[1400px] backdrop-blur supports-[padding-top:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] dark:bg-transparent bg-white">
+    <header className="px-4 lg:px-6 h-14 flex items-center mx-auto border-b dark:border-zinc-800 border-gray-200 fixed w-full top-0 z-[100] md:z-[10] max-w-[1400px] backdrop-blur supports-[padding-top:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] dark:bg-transparent bg-white">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="lg:hidden">
           <Button variant="ghost" size="icon" className="mr-2">

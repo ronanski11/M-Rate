@@ -144,3 +144,7 @@
 button:hover {
   cursor: pointer;
 }
+
+::selection {
+  background-color: var(--primary);
+}

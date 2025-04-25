@@ -16,6 +16,7 @@ export default function SearchBar({
   width = "w-full",
   flex = "flex-1",
   small = false,
+  autoFocus = false, // Add autoFocus prop with default value of false
 }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +26,13 @@ export default function SearchBar({
   const searchContainerRef = useRef(null);
   const inputRef = useRef(null);
   const timeoutRef = useRef(null);
+
+  // Apply autoFocus if enabled
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
 
   // Function to fetch movies from OMDB API
   const fetchMovies = async (query) => {
@@ -144,7 +152,7 @@ export default function SearchBar({
           <Input
             value={searchQuery}
             onChange={handleSearchChange}
-            className={`pl-11 text-lg rounded-lg ${height} ${width}`}
+            className={`px-11 text-lg rounded-lg ${height} ${width}`}
             placeholder="Search for a movie..."
             onFocus={() => setShowResults(searchQuery.trim() !== "")}
             ref={inputRef}
