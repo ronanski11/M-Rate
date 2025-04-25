@@ -13,6 +13,7 @@ export default function MovieCard({
   movie,
   onWatchlist: initialWatchlistStatus = false,
   fetchWatchlistStatus = false,
+  userRating,
 }) {
   const [onWatchlist, setOnWatchlist] = useState(initialWatchlistStatus);
   const [error, setError] = useState(null);
@@ -115,13 +116,22 @@ export default function MovieCard({
               <Bookmark className="h-4 w-4" />
             )}
           </Button>
-          {movie.imdbRating && (
+          {movie.imdbRating && !userRating && (
             <Badge
               className={`absolute top-2 left-2 ${getRatingColorClass(
                 movie.imdbRating
               )}`}
             >
               {movie.imdbRating}
+            </Badge>
+          )}
+          {userRating && (
+            <Badge
+              className={`absolute top-2 left-2 ${getRatingColorClass(
+                userRating
+              )}`}
+            >
+              {userRating}
             </Badge>
           )}
         </div>

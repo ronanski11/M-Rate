@@ -115,7 +115,12 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
-              <MovieCard key={movie.imdbID} movie={movie} onWatchlist={true} />
+              <MovieCard
+                key={movie.imdbID}
+                movie={movie}
+                onWatchlist={true}
+                userRating={movie.watchlistData?.rating}
+              />
             </motion.div>
           ))}
         </div>

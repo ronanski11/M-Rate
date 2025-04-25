@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import axios from "@/app/axiosInstance";
 
 const RatingDialog = ({ isOpen, onClose, movie, onRatingSubmit }) => {
-  const [rating, setRating] = useState({ imdbId: movie.imdbID, rating: 5 });
+  const [rating, setRating] = useState(5);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
@@ -22,11 +22,12 @@ const RatingDialog = ({ isOpen, onClose, movie, onRatingSubmit }) => {
     try {
       setIsSubmitting(true);
       // Call API to update rating
-      await axios.post("/rating", rating);
+      const ratingObj = { imdbId: movie.imdbID, rating: rating };
+      await axios.post("/rating", ratingObj);
 
       // Notify parent component about successful rating
       if (onRatingSubmit) {
-        onRatingSubmit(rating);
+        onRatingSubmit(ratingObj);
       }
 
       // Close the dialog
@@ -73,15 +74,11 @@ const RatingDialog = ({ isOpen, onClose, movie, onRatingSubmit }) => {
         <div className="py-8">
           <div className="flex flex-col space-y-6">
             <div className="flex justify-center items-center">
-              <span
-                className={`text-4xl font-bold ${getRatingColor(
-                  rating.rating
-                )}`}
-              >
-                {rating.rating.toFixed(1)}
+              <span className={`text-4xl font-bold ${getRatingColor(rating)}`}>
+                {rating.toFixed(1)}
               </span>
               <span className="text-base text-muted-foreground ml-2">
-                / 10 ({getRatingText(rating.rating)})
+                / 10 ({getRatingText(rating)})
               </span>
             </div>
 
@@ -92,13 +89,11 @@ const RatingDialog = ({ isOpen, onClose, movie, onRatingSubmit }) => {
               </div>
 
               <Slider
-                value={[rating?.rating || 0]}
+                value={[rating]}
                 min={1}
                 max={10}
                 step={0.1}
-                onValueChange={(value) =>
-                  setRating({ imdbId: movie.imdbID, rating: value[0] })
-                }
+                onValueChange={(value) => setRating(value[0])}
                 className="w-full"
               />
 
