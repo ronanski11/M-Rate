@@ -578,7 +578,7 @@ export default function WatchlistPage() {
                   </div>
                 </div>
 
-                <SheetFooter>
+                <SheetFooter className="mb-14">
                   <Button
                     onClick={() => {
                       setSearchQuery("");

@@ -1,14 +1,12 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, useRef, Suspense } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect, Suspense } from "react";
 import { Film, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
 import SearchBar from "@/components/searchbar";
 import MovieCard from "@/components/movie-card";
+import { motion } from "framer-motion";
 
 // Create a client component that uses search params
 function SearchResults() {
@@ -125,8 +123,19 @@ function SearchResults() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {movies.map((movie) => (
-              <MovieCard key={movie.imdbID} movie={movie} />
+            {movies.map((movie, index) => (
+              <motion.div
+                key={movie.imdbID}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <MovieCard
+                  key={movie.imdbID}
+                  movie={movie}
+                  fetchWatchlistStatus
+                />
+              </motion.div>
             ))}
           </div>
         )}

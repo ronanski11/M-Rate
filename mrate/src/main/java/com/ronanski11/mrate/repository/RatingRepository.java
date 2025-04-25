@@ -8,4 +8,6 @@ import com.ronanski11.mrate.model.Rating;
 @Repository
 public interface RatingRepository extends MongoRepository<Rating, String>{
 
+	Rating findByUserIdAndImdbId(String id, String imdbId);
+
 }

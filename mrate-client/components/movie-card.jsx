@@ -9,15 +9,19 @@ import { Button } from "@/components/ui/button";
 import axios from "@/app/axiosInstance";
 import { Badge } from "./ui/badge";
 
-export default function MovieCard({ movie }) {
-  const [onWatchlist, setOnWatchlist] = useState(false);
+export default function MovieCard({
+  movie,
+  onWatchlist: initialWatchlistStatus = false,
+  fetchWatchlistStatus = false,
+}) {
+  const [onWatchlist, setOnWatchlist] = useState(initialWatchlistStatus);
   const [error, setError] = useState(null);
 
-  // Check if movie is on watchlist when component mounts
+  // Fetch watchlist status if fetchWatchlistStatus is true
   useEffect(() => {
-    const fetchIsOnWatchlist = async () => {
-      if (!movie.imdbID) return;
+    if (!fetchWatchlistStatus || !movie.imdbID) return;
 
+    const fetchIsOnWatchlist = async () => {
       try {
         const response = await axios.get(
           `/watchlist/isPresent?imdbId=${movie.imdbID}`
@@ -30,7 +34,7 @@ export default function MovieCard({ movie }) {
     };
 
     fetchIsOnWatchlist();
-  }, [movie.imdbID]);
+  }, [movie.imdbID, fetchWatchlistStatus]);
 
   // Toggle watchlist status
   const changeWatchlistStatus = async (e) => {
@@ -125,7 +129,19 @@ export default function MovieCard({ movie }) {
           <h3 className="font-medium line-clamp-2 group-hover:text-primary transition-colors">
             {movie.Title}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">{movie.Year}</p>
+          <div className="flex items-center flex-wrap gap-1 mt-1">
+            <p className="text-sm text-muted-foreground">{movie.Year}</p>
+            {movie.Runtime && movie.Runtime !== "N/A" && (
+              <span className="text-sm text-muted-foreground">
+                • {movie.Runtime}
+              </span>
+            )}
+          </div>
+          {movie.Director && movie.Director !== "N/A" && (
+            <p className="text-xs text-muted-foreground mt-1 truncate">
+              {movie.Director}
+            </p>
+          )}
         </CardContent>
       </Card>
     </Link>
