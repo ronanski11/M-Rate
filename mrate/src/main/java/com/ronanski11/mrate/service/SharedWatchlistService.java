@@ -3,8 +3,6 @@ package com.ronanski11.mrate.service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,18 +24,10 @@ public class SharedWatchlistService {
     private UserRepository userRepository;
     
     public List<SharedWatchlist> getUserSharedWatchlists(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
-        return user.getSharedWatchlists().stream()
-                .map(watchlistId -> repository.findById(watchlistId)
-                        .orElse(null))
-                .filter(watchlist -> watchlist != null)
-                .collect(Collectors.toList());
+        return repository.findByUserId(userId);
     }
     
     public SharedWatchlist createSharedWatchlist(SharedWatchlist watchlist, String userId, String username) {
-        // Initialize new watchlist
         watchlist.setOwnerId(userId);
         watchlist.setLastUpdated(LocalDateTime.now());
         
@@ -201,17 +191,4 @@ public class SharedWatchlistService {
         repository.save(watchlist);
     }
     
-    public boolean isMovieWatchedByAllUsers(String watchlistId, String imdbId) {
-        SharedWatchlist watchlist = repository.findById(watchlistId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Watchlist not found"));
-        
-        if (!watchlist.getMovies().containsKey(imdbId)) {
-            return false;
-        }
-        
-        SharedWatchlistEntry entry = watchlist.getMovies().get(imdbId);
-        
-        return watchlist.getUserIds().stream()
-                .allMatch(userId -> entry.getRatings().containsKey(userId));
-    }
 }
