@@ -12,6 +12,7 @@ import {
   Search,
   Settings,
   User,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import logo from "@/app/assets/logo.png";
@@ -67,6 +68,7 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Home", icon: <House /> },
     { href: "/watchlist", label: "Watchlist", icon: <Bookmark /> },
+    { href: "/shared-watchlist", label: "Shared Watchlists", icon: <Users /> },
   ];
 
   const adminLinks = [];
