@@ -107,9 +107,9 @@ export default function SharedWatchlistMovieCard({
           <div className="absolute top-2 right-2">
             <Badge className={getRatingColorClass(averageRating)}>
               {ratings.length ? (
-                <Star className="h-3 w-3 mr-1 fill-current" />
-              ) : (
                 <Users className="h-3 w-3 mr-1 fill-current" />
+              ) : (
+                <Star className="h-3 w-3 mr-1 fill-current" />
               )}
               {averageRating}
             </Badge>
