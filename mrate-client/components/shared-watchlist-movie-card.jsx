@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FilmIcon, Star, Clock, Check, Plus } from "lucide-react";
+import { FilmIcon, Star, Check, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -107,7 +106,11 @@ export default function SharedWatchlistMovieCard({
         {averageRating && (
           <div className="absolute top-2 right-2">
             <Badge className={getRatingColorClass(averageRating)}>
-              <Star className="h-3 w-3 mr-1 fill-current" />
+              {ratings.length ? (
+                <Star className="h-3 w-3 mr-1 fill-current" />
+              ) : (
+                <Users className="h-3 w-3 mr-1 fill-current" />
+              )}
               {averageRating}
             </Badge>
           </div>
