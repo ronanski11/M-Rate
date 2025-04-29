@@ -40,6 +40,8 @@ export default function SharedWatchlistMovieCard({
       );
   }
 
+  console.log(movie);
+
   // Calculate average rating if any exist
   const ratings = Object.values(userRatings);
   const averageRating = ratings.length
