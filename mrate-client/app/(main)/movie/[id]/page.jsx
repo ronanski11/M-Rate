@@ -21,6 +21,7 @@ import axios from "@/app/axiosInstance";
 import Loading from "@/components/loading";
 import { motion } from "framer-motion";
 import RatingDialog from "@/components/rating-dialog";
+import { fetchMovieById } from "@/lib/omdb-service"; // Import our new service
 
 // Main component
 export default function MoviePage() {
@@ -41,31 +42,8 @@ export default function MoviePage() {
       }
 
       try {
-        // Direct API call from client component
-        const apiKey = process.env.NEXT_PUBLIC_OMDB;
-
-        if (!apiKey) {
-          setError("API key is not configured");
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(
-          `https://www.omdbapi.com/?i=${params.id}&apikey=${apiKey}&plot=full`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch movie: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.Response === "False") {
-          setError(data.Error || "Movie not found");
-          setLoading(false);
-          return;
-        }
-
+        // Use our caching service instead of direct API call
+        const data = await fetchMovieById(params.id);
         setMovie(data);
         setLoading(false);
       } catch (err) {

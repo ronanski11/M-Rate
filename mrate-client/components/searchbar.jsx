@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Plus, CircleX } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { searchMovies } from "@/lib/omdb-service"; // Import our new service
 
 export default function SearchBar({
   onResultSelect,
@@ -16,7 +17,7 @@ export default function SearchBar({
   width = "w-full",
   flex = "flex-1",
   small = false,
-  autoFocus = false, // Add autoFocus prop with default value of false
+  autoFocus = false,
 }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +35,7 @@ export default function SearchBar({
     }
   }, [autoFocus]);
 
-  // Function to fetch movies from OMDB API
+  // Function to fetch movies from OMDB API using our cached service
   const fetchMovies = async (query) => {
     if (!query || query.trim() === "") {
       setSearchResults([]);
@@ -43,12 +44,8 @@ export default function SearchBar({
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://www.omdbapi.com/?s=${encodeURIComponent(
-          query
-        )}&type=movie&apikey=${process.env.NEXT_PUBLIC_OMDB}`
-      );
-      const data = await response.json();
+      // Use our cache service instead of direct API call
+      const data = await searchMovies(query);
 
       if (data.Response === "True" && data.Search) {
         setSearchResults(data.Search);
