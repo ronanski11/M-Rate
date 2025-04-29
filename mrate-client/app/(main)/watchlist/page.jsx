@@ -43,6 +43,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RatingDialog from "@/components/rating-dialog";
 import { motion } from "framer-motion";
+import { fetchMovieById } from "@/lib/omdb-service";
 
 export default function WatchlistPage() {
   // State for watchlist data and UI control
@@ -78,10 +79,7 @@ export default function WatchlistPage() {
           // Fetch movie details for each watchlist item
           const movieDetailsPromises = watchlistArray.map(async (item) => {
             try {
-              const movieResponse = await fetch(
-                `https://www.omdbapi.com/?i=${item.imdbId}&apikey=${process.env.NEXT_PUBLIC_OMDB}`
-              );
-              const movieData = await movieResponse.json();
+              const movieData = await fetchMovieById(item.imdbId);
 
               if (movieData.Response === "True") {
                 return {

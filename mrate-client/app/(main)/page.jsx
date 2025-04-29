@@ -10,6 +10,7 @@ import axios from "@/app/axiosInstance";
 import Link from "next/link";
 import Loading from "@/components/loading";
 import { motion } from "framer-motion";
+import { fetchMovieById } from "@/lib/omdb-service";
 
 export default function Home() {
   const [watchlistMovies, setWatchlistMovies] = useState([]);
@@ -43,10 +44,7 @@ export default function Home() {
           // Fetch movie details for each watchlist item
           const movieDetailsPromises = limitedWatchlist.map(async (item) => {
             try {
-              const movieResponse = await fetch(
-                `https://www.omdbapi.com/?i=${item.imdbId}&apikey=${process.env.NEXT_PUBLIC_OMDB}`
-              );
-              const movieData = await movieResponse.json();
+              const movieData = await fetchMovieById(item.imdbId);
 
               if (movieData.Response === "True") {
                 return {

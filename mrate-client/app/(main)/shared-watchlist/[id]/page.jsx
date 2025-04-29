@@ -62,6 +62,7 @@ import Loading from "@/components/loading";
 import RatingDialog from "@/components/rating-dialog";
 import SharedWatchlistMovieCard from "@/components/shared-watchlist-movie-card";
 import { motion } from "framer-motion";
+import { fetchMovieById } from "@/lib/omdb-service";
 
 export default function SharedWatchlistDetailPage() {
   const params = useParams();
@@ -131,10 +132,7 @@ export default function SharedWatchlistDetailPage() {
           const movieDetailsPromises = movieEntries.map(
             async ([imdbId, movieData]) => {
               try {
-                const movieResponse = await fetch(
-                  `https://www.omdbapi.com/?i=${imdbId}&apikey=${process.env.NEXT_PUBLIC_OMDB}`
-                );
-                const movieDetails = await movieResponse.json();
+                const movieDetails = await fetchMovieById(imdbId);
                 if (movieDetails.Response === "True") {
                   return {
                     ...movieDetails,
