@@ -46,6 +46,8 @@ export default function SharedWatchlistMovieCard({
     ? (
         ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
       ).toFixed(1)
+    : movie.imdbRating !== undefined
+    ? movie.imdbRating
     : null;
 
   // Check if current user has rated
