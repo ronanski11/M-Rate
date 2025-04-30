@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Star, BookmarkIcon, ArrowRight, Loader2 } from "lucide-react";
+import { Star, BookmarkIcon, ArrowRight } from "lucide-react";
 import SearchBar from "@/components/searchbar";
 import MovieCard from "@/components/movie-card";
 import axios from "@/app/axiosInstance";
