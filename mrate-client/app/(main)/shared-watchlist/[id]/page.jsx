@@ -17,6 +17,7 @@ import {
   CheckCheck,
   AlertCircle,
   Trash,
+  Dices,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,8 @@ import { toast } from "sonner";
 import Loading from "@/components/loading";
 import RatingDialog from "@/components/rating-dialog";
 import SharedWatchlistMovieCard from "@/components/shared-watchlist-movie-card";
+import MovieRandomizer from "@/components/movie-randomizer";
+import MovieRoulette from "@/components/movie-roulette";
 import { motion } from "framer-motion";
 import { fetchMovieById } from "@/lib/omdb-service";
 
@@ -430,6 +433,29 @@ export default function SharedWatchlistDetailPage() {
     );
   }
 
+  const getHighestRatedMovie = () => {
+    if (!movies.length) return null;
+
+    let highestRatedMovie = null;
+    let highestAvgRating = -1;
+
+    movies.forEach((movie) => {
+      if (movie.watchlistData?.ratings) {
+        const ratings = Object.values(movie.watchlistData.ratings);
+        if (ratings.length) {
+          const avgRating =
+            ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+          if (avgRating > highestAvgRating) {
+            highestAvgRating = avgRating;
+            highestRatedMovie = movie;
+          }
+        }
+      }
+    });
+
+    return highestRatedMovie;
+  };
+
   const progress = calculateProgress();
   const filteredAndSortedMovies = getFilteredAndSortedMovies();
 
@@ -609,6 +635,62 @@ export default function SharedWatchlistDetailPage() {
               </SheetFooter>
             </SheetContent>
           </Sheet>
+        </div>
+      </div>
+
+      {/* Enhanced Movie Randomizer Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Movie Stats Card */}
+        <div className="bg-card border rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Film className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-xl font-medium">Movie Stats</h3>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Total Movies</span>
+              <Badge variant="outline" className="px-3 py-1">
+                {movies.length}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Unwatched Movies</span>
+              <Badge variant="outline" className="px-3 py-1">
+                {movies.filter((m) => !m.watchlistData?.watched).length}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Highest Rated</span>
+              {movies.length > 0 ? (
+                <Badge variant="outline" className="px-3 py-1">
+                  {getHighestRatedMovie()?.Title?.substring(0, 20) ||
+                    "None rated yet"}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="px-3 py-1">
+                  None
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Movie Randomizer Card */}
+        <div className="bg-card border rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Dices className="h-5 w-5 text-primary" />
+            <h3 className="text-xl font-medium">Random Movie Picker</h3>
+          </div>
+
+          <p className="text-muted-foreground mb-6">
+            Can't decide what to watch tonight? Let the randomizer choose for
+            you!
+          </p>
+
+          <MovieRandomizer movies={movies} />
         </div>
       </div>
 
