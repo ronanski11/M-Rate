@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -17,7 +17,8 @@ const Wheel = dynamic(
   { ssr: false }
 );
 
-export default function SpinWheelPage() {
+// Separate the search params logic into a client component
+function SpinWheelContent() {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [winningMovie, setWinningMovie] = useState(null);
@@ -117,12 +118,12 @@ export default function SpinWheelPage() {
   };
 
   return (
-    <div className="container max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">
+    <div className="container max-w-4xl mx-auto px-4 py-6 flex flex-col items-center">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-center mb-8"
+        className="text-center mb-4"
       >
         <h1 className="text-4xl font-bold mb-2">Movie Wheel of Fortune</h1>
         <p className="text-muted-foreground">
@@ -130,7 +131,7 @@ export default function SpinWheelPage() {
         </p>
       </motion.div>
 
-      <div className="mb-8 relative">
+      <div className="mb-4 relative">
         {loading ? (
           <div className="w-[300px] h-[300px] flex items-center justify-center">
             <Loading message="wheel" />
@@ -253,5 +254,14 @@ export default function SpinWheelPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+// Main SpinWheelPage component with Suspense
+export default function SpinWheelPage() {
+  return (
+    <Suspense fallback={<Loading message="loading wheel" />}>
+      <SpinWheelContent />
+    </Suspense>
   );
 }
