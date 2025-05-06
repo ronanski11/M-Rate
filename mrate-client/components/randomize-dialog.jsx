@@ -94,8 +94,8 @@ export default function RandomizeDialog({
 
     // Construct URL query parameter
     const options = selectedMovies
-      .map((movie) => `${encodeURIComponent(movie.Title)}=${movie.imdbID}`)
-      .join(",");
+      .map((movie) => `${encodeURIComponent(movie.Title)}===${movie.imdbID}`)
+      .join(",,,");
 
     // Navigate to spin-the-wheel page
     router.push(`/spin-the-wheel?options=${options}`);

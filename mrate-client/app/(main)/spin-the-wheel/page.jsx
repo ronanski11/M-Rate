@@ -48,8 +48,8 @@ function SpinWheelContent() {
 
     try {
       // Parse movies in format: Name=imdbId,Name2=imdbId2
-      const parsedOptions = optionsParam.split(",").map((item) => {
-        const [name, imdbId] = item.split("=");
+      const parsedOptions = optionsParam.split(",,,").map((item) => {
+        const [name, imdbId] = item.split("===");
         if (!name || !imdbId) {
           throw new Error("Invalid format");
         }
