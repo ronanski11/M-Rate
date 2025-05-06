@@ -78,4 +78,8 @@ public class RatingService {
 		return repo.findByUserIdAndImdbId(id, imdbId);
 	}
 
+	public List<Rating> getAllRated(String id) {
+		return repo.findByUserId(id);
+	}
+
 }

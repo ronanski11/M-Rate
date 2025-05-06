@@ -1,5 +1,7 @@
 package com.ronanski11.mrate.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,11 @@ public class RatingController {
 	@GetMapping()
 	public ResponseEntity<Rating> getRatingByImdbId(@RequestParam String imdbId) {
 		return ResponseEntity.ok(service.getRatingByImdbId(imdbId, auth.getId()));
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<Rating>> getAllRated() {
+		return ResponseEntity.ok(service.getAllRated(auth.getId()));
 	}
 	
 }

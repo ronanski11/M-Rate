@@ -15,7 +15,9 @@ import { fetchMovieById } from "@/lib/omdb-service";
 export default function Home() {
   const [watchlistMovies, setWatchlistMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingRated, setLoadingRated] = useState(true);
   const [error, setError] = useState(null);
+  const [ratedMovies, setRatedMovies] = useState([]);
 
   // Fetch user's watchlist when component mounts
   useEffect(() => {
@@ -70,7 +72,54 @@ export default function Home() {
       }
     };
 
+    const fetchRated = async () => {
+      try {
+        setLoadingRated(true);
+        const response = await axios.get("/rating/all");
+
+        if (!response.data) return;
+        const ratedArray = response.data;
+
+        // Sort by date added (newest first)
+        ratedArray.sort(
+          (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
+        );
+
+        // Limit to 6 entries
+        const limitedRatedArray = ratedArray.slice(0, 12);
+
+        // Fetch movie details for each watchlist item
+        const ratedMovieDetailsPromises = limitedRatedArray.map(
+          async (item) => {
+            try {
+              const movieData = await fetchMovieById(item.imdbId);
+
+              if (movieData.Response === "True") {
+                return {
+                  ...movieData,
+                  ratedInfo: item,
+                };
+              }
+              return null;
+            } catch (err) {
+              console.error(`Error fetching movie ${item.imdbId}:`, err);
+              return null;
+            }
+          }
+        );
+
+        const ratedMovieDetails = await Promise.all(ratedMovieDetailsPromises);
+        setRatedMovies(ratedMovieDetails.filter((movie) => movie !== null));
+      } catch (err) {
+        console.error("Error fetching watchlist:", err);
+        setError("Failed to load your watchlist");
+      } finally {
+        setLoadingRated(false);
+      }
+    };
+
     fetchWatchlist();
+    fetchRated();
   }, []);
 
   // Render watchlist content based on loading/error/data state
@@ -135,6 +184,69 @@ export default function Home() {
     );
   };
 
+  const renderRatedContent = () => {
+    if (loadingRated) {
+      return <Loading message={"rated movies"} />;
+    }
+
+    if (error) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-destructive mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      );
+    }
+
+    if (ratedMovies.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <Star className="h-16 w-16 mx-auto mb-4" />
+          <h3 className="text-xl font-medium mb-2">
+            You haven't rated any movies yet
+          </h3>
+          <p className="mb-6">
+            Rate movies to keep track of what you've watched
+          </p>
+          <Link href="/search">
+            <Button>Discover Movies</Button>
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          {ratedMovies.map((movie, index) => (
+            <motion.div
+              key={movie.imdbID}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <MovieCard
+                key={movie.imdbID}
+                movie={movie}
+                fetchWatchlistStatus
+                userRating={movie.ratedInfo.rating}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="flex justify-center mt-6 w-full">
+          <Link href="/" className="w-full">
+            <Button variant="" className="flex items-center w-full">
+              View all rated movies
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 container px-4 py-8 flex flex-col items-center">
@@ -173,18 +285,7 @@ export default function Home() {
             </TabsContent>
 
             <TabsContent value="rated" className="mt-6">
-              <div className="text-center py-12">
-                <Star className="h-16 w-16 mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">
-                  You haven't rated any movies yet
-                </h3>
-                <p className="mb-6">
-                  Rate movies to keep track of what you've watched
-                </p>
-                <Link href="/search">
-                  <Button>Discover Movies</Button>
-                </Link>
-              </div>
+              {renderRatedContent()}
             </TabsContent>
           </Tabs>
         </section>
