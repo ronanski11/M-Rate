@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Film, Bookmark, Check } from "lucide-react";
+import { Film, Bookmark, Check, User, Star, Clapperboard } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import axios from "@/app/axiosInstance";
@@ -122,6 +122,8 @@ export default function MovieCard({
                 movie.imdbRating
               )}`}
             >
+              {" "}
+              <Clapperboard />
               {movie.imdbRating}
             </Badge>
           )}
@@ -131,6 +133,7 @@ export default function MovieCard({
                 userRating
               )}`}
             >
+              <Star />
               {userRating}
             </Badge>
           )}

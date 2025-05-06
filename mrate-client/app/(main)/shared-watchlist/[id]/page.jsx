@@ -13,6 +13,7 @@ import {
   Loader2,
   SlidersHorizontal,
   ListFilter,
+  LoaderPinwheel,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,9 @@ import RatingDialog from "@/components/rating-dialog";
 import SharedWatchlistMovieCard from "@/components/shared-watchlist-movie-card";
 import { motion } from "framer-motion";
 import { fetchMovieById } from "@/lib/omdb-service";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Table } from "@/components/ui/table";
+import RandomizeDialog from "@/components/randomize-dialog";
 
 export default function SharedWatchlistDetailPage() {
   const params = useParams();
@@ -72,7 +76,7 @@ export default function SharedWatchlistDetailPage() {
   const [currentUserId, setCurrentUserId] = useState(null);
 
   // UI State
-  const [selectedTab, setSelectedTab] = useState("all");
+  const [selectedTab, setSelectedTab] = useState("unwatched");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("dateAdded");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -86,6 +90,7 @@ export default function SharedWatchlistDetailPage() {
   const [isSearching, setIsSearching] = useState(false);
   const [ratingDialogOpen, setRatingDialogOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [randomizeDialogOpen, setRandomizeDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchWatchlistDetails();
@@ -421,8 +426,6 @@ export default function SharedWatchlistDetailPage() {
   const progress = calculateProgress();
   const filteredAndSortedMovies = getFilteredAndSortedMovies();
 
-  console.log(watchlist, movies);
-
   return (
     <div className="container max-w-6xl mx-auto px-4 py-8">
       {/* Back button and header */}
@@ -445,7 +448,6 @@ export default function SharedWatchlistDetailPage() {
               </p>
             )}
           </div>
-
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -470,7 +472,6 @@ export default function SharedWatchlistDetailPage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
             <Button
               onClick={() => setMovieSearchDialogOpen(true)}
               size="sm"
@@ -479,7 +480,16 @@ export default function SharedWatchlistDetailPage() {
               <Plus className="h-4 w-4" />
               Add Movie
             </Button>
-          </div>
+          </div>{" "}
+          <Button
+            onClick={() => setRandomizeDialogOpen(true)}
+            size="sm"
+            className="gap-2 h-9"
+            variant="outline"
+          >
+            <LoaderPinwheel className="h-4 w-4" />
+            Randomize
+          </Button>
         </div>
 
         {/* Progress bar */}
@@ -637,7 +647,7 @@ export default function SharedWatchlistDetailPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-2 lg:grid-cols-6 gap-6"
         >
           {filteredAndSortedMovies.map((movie) => (
             <motion.div key={movie.imdbID} variants={itemVariants}>
@@ -790,6 +800,13 @@ export default function SharedWatchlistDetailPage() {
           onRatingSubmit={handleRatingSubmit}
         />
       )}
+      <RandomizeDialog
+        isOpen={randomizeDialogOpen}
+        onClose={() => setRandomizeDialogOpen(false)}
+        movies={movies}
+        members={members}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 }
