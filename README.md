@@ -42,7 +42,6 @@
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Usage](#usage)
-    - [Testing](#testing)
 
 ---
 
@@ -124,26 +123,6 @@ npm start
 
 ```sh
 mvn exec:java
-```
-
-### Testing
-
-M-rate uses the {__test_framework__} test framework. Run the test suite with:
-
-**Using [docker](https://www.docker.com/):**
-
-```sh
-echo 'INSERT-TEST-COMMAND-HERE'
-```
-**Using [npm](https://www.npmjs.com/):**
-
-```sh
-npm test
-```
-**Using [maven](https://maven.apache.org/):**
-
-```sh
-mvn test
 ```
 
 ---
